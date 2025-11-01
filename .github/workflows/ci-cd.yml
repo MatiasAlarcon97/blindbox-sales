@@ -47,6 +47,8 @@ jobs:
     # 7️⃣ Despliegue con Docker Compose
     - name: Deploy with Docker Compose
       run: |
+        docker --version
+        docker compose version
         cat <<-EOF > docker-compose.yml
           version: '3.8'
           services:
