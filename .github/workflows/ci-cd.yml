@@ -44,19 +44,8 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-    # 7️⃣ Despliegue con Docker Compose
-    - name: Deploy with Docker Compose
+    # 7️⃣ Despliegue con Docker Compose (con debug)
+    - name: Deploy with Docker Compose (non-blocking)
       run: |
-        docker --version
-        docker compose version
-        cat <<-EOF > docker-compose.yml
-          version: '3.8'
-          services:
-            blindbox-app:
-              image: blindbox-sales:latest
-              ports:
-                - '5000:5000'
-        EOF
-        docker compose up -d
-
-
+        docker compose up -d --build
+        docker ps -a
