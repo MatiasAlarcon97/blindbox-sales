@@ -47,13 +47,14 @@ jobs:
     # 7️⃣ Despliegue con Docker Compose
     - name: Deploy with Docker Compose
       run: |
-        cat <<EOF > docker-compose.yml
-version: '3.8'
-services:
-  blindbox-app:
-    image: blindbox-sales:latest
-    ports:
-      - '5000:5000'
-EOF
+        cat <<-EOF > docker-compose.yml
+          version: '3.8'
+          services:
+            blindbox-app:
+              image: blindbox-sales:latest
+              ports:
+                - '5000:5000'
+        EOF
         docker compose up -d
+
 
