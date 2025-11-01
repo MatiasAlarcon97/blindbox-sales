@@ -39,11 +39,13 @@ jobs:
 
     # 6️⃣ Escaneo de seguridad con Snyk (¡Autenticación Agregada!)
     - name: Snyk Container Scan
-      uses: snyk/actions/docker@v3 # ⬅️ Corregido el error de la versión
+      # 🚨 ¡ESTE ES EL CAMBIO CLAVE! Usar @master
+      uses: snyk/actions/docker@master 
       with:
         image: blindbox-sales:latest
         fail-on: 'vulns'
-      env: # ⬅️ Agregada la autenticación, necesaria después de este fix
+      env:
+        # Recuerda SIEMPRE incluir esto, es necesario para la autenticación
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     # 7️⃣ Despliegue simulado con Docker Compose (Usando la sintaxis moderna 'docker compose')
