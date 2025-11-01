@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1️⃣ Obtener el código
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2️⃣ Configurar Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    # 3️⃣ Instalar dependencias
+    - name: Install dependencies
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install -r app/requirements.txt
+
+    # 4️⃣ Ejecutar tests
+    - name: Run tests
+      run: |
+        source .venv/bin/activate
+        pytest -q
+
+    # 5️⃣ Construir la imagen Docker
+    - name: Build Docker image
+      run: docker build -t blindbox-sales:latest .
+
+    # 6️⃣ Escaneo de seguridad con Snyk
+    - name: Snyk Container Scan
+      uses: snyk/actions/docker@v2
+      with:
+        image: blindbox-sales:latest
+        fail-on: 'vulns'
+
+    # 7️⃣ Despliegue simulado con Docker Compose
+    - name: Deploy with Docker Compose
+      run: |
+        echo "version: '3.8'
+        services:
+          blindbox-app:
+            image: blindbox-sales:latest
+            ports:
+              - '5000:5000'" > docker-compose.yml
+        docker-compose up -d
+|
