@@ -39,7 +39,7 @@ jobs:
 
     # 6️⃣ Escaneo de seguridad con Snyk (¡Autenticación Agregada!)
     - name: Snyk Container Scan
-      uses: snyk/actions/docker@v4 # ⬅️ Corregido el error de la versión
+      uses: snyk/actions/docker@v3 # ⬅️ Corregido el error de la versión
       with:
         image: blindbox-sales:latest
         fail-on: 'vulns'
