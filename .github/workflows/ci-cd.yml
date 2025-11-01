@@ -52,4 +52,3 @@ jobs:
             ports:
               - '5000:5000'" > docker-compose.yml
         docker-compose up -d
-|
