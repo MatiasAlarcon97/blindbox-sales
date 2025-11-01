@@ -25,42 +25,35 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # Asegúrate de que 'app/requirements.txt' es la ruta correcta
         pip install -r app/requirements.txt
 
-    # 4️⃣ Ejecutar tests (Asegúrate de que la ruta sea correcta)
+    # 4️⃣ Ejecutar tests
     - name: Run tests
       run: pytest -q
-      # working-directory: ./app # Descomenta si los tests están en 'app/'
 
     # 5️⃣ Construir la imagen Docker
     - name: Build Docker image
       run: docker build -t blindbox-sales:latest .
 
-    # 6️⃣ Escaneo de seguridad con Snyk (¡Autenticación Agregada!)
+    # 6️⃣ Escaneo de seguridad con Snyk
     - name: Snyk Container Scan
-      # 🚨 ¡ESTE ES EL CAMBIO CLAVE! Usar @master
-      uses: snyk/actions/docker@master 
+      uses: snyk/actions/docker@v2
       with:
         image: blindbox-sales:latest
         fail-on: 'vulns'
       env:
-        # Recuerda SIEMPRE incluir esto, es necesario para la autenticación
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        
-    # 🆕 Paso agregado para corregir el 'exit code 127'
-    - name: Install Docker Compose Plugin
-      run: sudo apt-get update && sudo apt-get install -y docker-compose-plugin
 
-    # 7️⃣ Despliegue simulado con Docker Compose (Usando la sintaxis moderna 'docker compose')
+    # 7️⃣ Despliegue con Docker Compose
     - name: Deploy with Docker Compose
       run: |
-        # Usaremos 'docker compose' (el plugin) que está disponible en runners de Ubuntu.
-        echo "version: '3.8'
-        services:
-          blindbox-app:
-            image: blindbox-sales:latest
-            ports:
-              - '5000:5000'" > docker-compose.yml
-        # Usar 'docker compose' en lugar de 'docker-compose'
+        cat <<EOF > docker-compose.yml
+version: '3.8'
+services:
+  blindbox-app:
+    image: blindbox-sales:latest
+    ports:
+      - '5000:5000'
+EOF
         docker compose up -d
+
