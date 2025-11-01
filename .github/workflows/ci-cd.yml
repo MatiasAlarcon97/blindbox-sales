@@ -47,6 +47,10 @@ jobs:
       env:
         # Recuerda SIEMPRE incluir esto, es necesario para la autenticación
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        
+    # 🆕 Paso agregado para corregir el 'exit code 127'
+    - name: Install Docker Compose Plugin
+      run: sudo apt-get update && sudo apt-get install -y docker-compose-plugin
 
     # 7️⃣ Despliegue simulado con Docker Compose (Usando la sintaxis moderna 'docker compose')
     - name: Deploy with Docker Compose
