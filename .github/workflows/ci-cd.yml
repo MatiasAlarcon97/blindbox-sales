@@ -37,7 +37,7 @@ jobs:
 
     # 6️⃣ Escaneo de seguridad con Snyk
     - name: Snyk Container Scan
-      uses: snyk/actions/docker@v2
+      uses: snyk/actions/docker@master
       with:
         image: blindbox-sales:latest
         fail-on: 'vulns'
